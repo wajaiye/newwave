@@ -334,7 +334,7 @@ const gameState = {
     portfolioValue: 0,
     quarter: 2,
     year: 2025,
-    maxQuarters: 4,
+    maxQuarters: 6,
     portfolio: [],
     startups: [],
     events: [],
@@ -487,6 +487,7 @@ function renderStartups() {
             investButton.disabled = true;
         } else {
             investButton.textContent = "Invest";
+            // Only disable this specific button if funds are insufficient for THIS startup
             investButton.disabled = gameState.funds < startup.cost;
             investButton.addEventListener("click", () => investInStartup(startup.id));
         }
