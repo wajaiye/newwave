@@ -22,20 +22,12 @@
             line-height: 1.6;
         }
         
-        header {
-            background-color: var(--secondary-color);
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+          header { background: white; color: #fff; padding: 20px; text-align: center; }
 
-.cta { margin-top: 20px; display: inline-block; background: #ff9800; color: #fff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-size: 1.2rem; transition: background 0.3s; }
+      .cta { margin-top: 20px; display: inline-block; background: #ff9800; color: #fff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-size: 1.2rem; transition: background 0.3s; }
         .cta:hover { background: #e88c00; }
         
-        .logo {
-            max-height: 60px;
-        }
+        .logo { height: 120px; }
         
         .logo-text {
             font-size: 24px;
