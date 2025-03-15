@@ -572,7 +572,7 @@ function processInvestments() {
         let eventType = "neutral";
         let eventMessage = "";
         
-        if (performanceRoll < 30 + (startup.risk * 5)) {
+        if (performanceRoll < 15 + (startup.risk * 5)) {
             // Negative event
             valueChange = -(Math.floor(Math.random() * 50) + 5); // -5% to -55%
             eventType = "failure";
@@ -584,7 +584,7 @@ function processInvestments() {
                 .replace("{name}", startup.name)
                 .replace("{percent}", Math.abs(valueChange))
                 .replace("{company}", bigCompanies[Math.floor(Math.random() * bigCompanies.length)]);
-        } else if (performanceRoll > 90 - (startup.potential * 5)) {
+        } else if (performanceRoll > 85 - (startup.potential * 5)) {
             // Positive event
             valueChange = Math.floor(Math.random() * 30) + 10; // +10% to +40%
             eventType = "success";
