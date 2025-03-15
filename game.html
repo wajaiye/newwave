@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Wave Investments - Venture Capital Game</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            max-height: 60px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .game-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .game-header h1 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: var(--light-color);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .startups-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .startup-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .startup-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .startup-name {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .startup-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .startup-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .startup-risk {
+            color: var(--danger-color);
+        }
+        
+        .startup-potential {
+            color: var(--success-color);
+        }
+        
+        .startup-cost {
+            font-weight: bold;
+        }
+        
+        .invest-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .invest-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .invest-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .events-log {
+            height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .event {
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .event-success {
+            color: var(--success-color);
+        }
+        
+        .event-failure {
+            color: var(--danger-color);
+        }
+        
+        .event-neutral {
+            color: var(--primary-color);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        
+        .modal-title {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .game-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .startups-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-text">New Wave Investments</div>
+    </header>
+    
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Venture Capital Investment Game</h1>
+            <p>Invest in startups, manage your portfolio, and become a successful venture capitalist!</p>
+        </div>
+        
+        <div class="game-stats">
+            <div class="stat">
+                <div class="stat-label">Available Funds</div>
+                <div class="stat-value" id="funds">$10,000,000</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Portfolio Value</div>
+                <div class="stat-value" id="portfolio-value">$0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Quarter</div>
+                <div class="stat-value" id="quarter">1</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Year</div>
+                <div class="stat-value" id="year">2025</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="next-quarter">Advance to Next Quarter</button>
+            <button class="btn btn-primary" id="restart-game">Restart Game</button>
+        </div>
+        
+        <h2>Investment Opportunities</h2>
+        <div class="startups-container" id="startups">
+            <!-- Startup cards will be generated here -->
+        </div>
+        
+        <h2>Events Log</h2>
+        <div class="events-log" id="events-log">
+            <div class="event event-neutral">Welcome to New Wave Investments! You have $10,000,000 to invest in promising startups.</div>
+        </div>
+        
+        <div id="results-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 class="modal-title">Game Results</h2>
+                <div id="results-content"></div>
+                <button class="btn btn-primary" id="new-game">Start New Game</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 New Wave Investments. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Game state
+        const gameState = {
+            funds: 10000000,
+            portfolioValue: 0,
+            quarter: 1,
+            year: 2025,
+            maxQuarters: 20,
+            portfolio: [],
+            startups: [],
+            events: [],
+            gameOver: false
+        };
+
+        // Startup categories
+        const categories = [
+            "AI & Machine Learning",
+            "Biotech & Healthcare",
+            "Clean Energy",
+            "Fintech",
+            "E-commerce",
+            "SaaS",
+            "Edtech",
+            "Gaming",
+            "Cybersecurity",
+            "VR/AR"
+        ];
+
+        // Startup name components
+        const namePrefix = ["Nova", "Quantum", "Eco", "Cyber", "Meta", "Nexus", "Fusion", "Hyper", "Pulse", "Vortex", "Spark", "Horizon", "Apex", "Bright", "Atlas"];
+        const nameSuffix = ["Tech", "Labs", "ify", "AI", "Works", "Sync", "Connect", "Link", "Logic", "Ware", "Hub", "Systems", "Nest", "Mind", "Flow"];
+
+        // Event types
+        const events = [
+            { type: "success", message: "{name} secured a major partnership with {partner}! Value increased by {percent}%." },
+            { type: "success", message: "{name} successfully launched their product! Value increased by {percent}%." },
+            { type: "success", message: "{name} attracted a top executive from {company}! Value increased by {percent}%." },
+            { type: "success", message: "{name} received positive media coverage! Value increased by {percent}%." },
+            { type: "failure", message: "{name} facing regulatory challenges. Value decreased by {percent}%." },
+            { type: "failure", message: "{name} competitor launched a superior product. Value decreased by {percent}%." },
+            { type: "failure", message: "{name} missed quarterly targets. Value decreased by {percent}%." },
+            { type: "failure", message: "{name} CEO resigned amid controversy. Value decreased by {percent}%." },
+            { type: "neutral", message: "{name} is restructuring their team. No change in value." },
+            { type: "neutral", message: "{name} is pivoting their business model. No change in value." }
+        ];
+
+        // Big companies for events
+        const bigCompanies = ["Google", "Amazon", "Microsoft", "Apple", "Meta", "Tesla", "IBM", "Oracle", "Salesforce", "Intel"];
+
+        // DOM elements
+        const fundsElement = document.getElementById("funds");
+        const portfolioValueElement = document.getElementById("portfolio-value");
+        const quarterElement = document.getElementById("quarter");
+        const yearElement = document.getElementById("year");
+        const startupsContainer = document.getElementById("startups");
+        const eventsLogElement = document.getElementById("events-log");
+        const nextQuarterButton = document.getElementById("next-quarter");
+        const restartGameButton = document.getElementById("restart-game");
+        const resultsModal = document.getElementById("results-modal");
+        const resultsContent = document.getElementById("results-content");
+        const newGameButton = document.getElementById("new-game");
+        const closeModalButton = document.querySelector(".close");
+
+        // Initialize game
+        function initGame() {
+            gameState.funds = 10000000;
+            gameState.portfolioValue = 0;
+            gameState.quarter = 1;
+            gameState.year = 2025;
+            gameState.portfolio = [];
+            gameState.startups = [];
+            gameState.events = [{ type: "neutral", message: "Welcome to New Wave Investments! You have $10,000,000 to invest in promising startups." }];
+            gameState.gameOver = false;
+            
+            generateStartups();
+            updateUI();
+        }
+
+        // Generate random startups
+        function generateStartups() {
+            gameState.startups = [];
+            const numStartups = Math.floor(Math.random() * 3) + 5; // 5-7 startups
+            
+            for (let i = 0; i < numStartups; i++) {
+                const name = `${namePrefix[Math.floor(Math.random() * namePrefix.length)]}${nameSuffix[Math.floor(Math.random() * nameSuffix.length)]}`;
+                const category = categories[Math.floor(Math.random() * categories.length)];
+                const risk = Math.floor(Math.random() * 5) + 1; // 1-5 risk level
+                const potential = Math.floor(Math.random() * 5) + 1; // 1-5 potential level
+                const cost = Math.floor((Math.random() * 1000000) + 500000); // $500k - $1.5M
+                
+                const descriptions = [
+                    `A ${category} startup focusing on innovative solutions for modern problems.`,
+                    `This ${category} company is changing the way we think about technology.`,
+                    `A groundbreaking approach to ${category} with strong market potential.`,
+                    `Disruptive ${category} technology with the potential to revolutionize the industry.`,
+                    `An early-stage ${category} startup with a unique value proposition.`
+                ];
+                
+                const startup = {
+                    id: i + 1,
+                    name,
+                    category,
+                    description: descriptions[Math.floor(Math.random() * descriptions.length)],
+                    risk,
+                    potential,
+                    cost,
+                    valueMultiplier: 1,
+                    invested: false
+                };
+                
+                gameState.startups.push(startup);
+            }
+        }
+
+        // Update UI
+        function updateUI() {
+            fundsElement.textContent = `$
