@@ -330,7 +330,7 @@
     <script>
   // Game state
 const gameState = {
-    funds: 2500000,
+    funds: 3000000,
     portfolioValue: 0,
     quarter: 2,
     year: 2025,
@@ -392,7 +392,7 @@ const closeModalButton = document.querySelector(".close");
 
 // Initialize game
 function initGame() {
-    gameState.funds = 2500000;
+    gameState.funds = 3000000;
     gameState.portfolioValue = 0;
     gameState.quarter = 2;
     gameState.year = 2025;
@@ -572,7 +572,7 @@ function processInvestments() {
         let eventType = "neutral";
         let eventMessage = "";
         
-        if (performanceRoll < 50 + (startup.risk * 5)) {
+        if (performanceRoll < 30 + (startup.risk * 5)) {
             // Negative event
             valueChange = -(Math.floor(Math.random() * 50) + 5); // -5% to -55%
             eventType = "failure";
@@ -584,7 +584,7 @@ function processInvestments() {
                 .replace("{name}", startup.name)
                 .replace("{percent}", Math.abs(valueChange))
                 .replace("{company}", bigCompanies[Math.floor(Math.random() * bigCompanies.length)]);
-        } else if (performanceRoll > 100 - (startup.potential * 5)) {
+        } else if (performanceRoll > 90 - (startup.potential * 5)) {
             // Positive event
             valueChange = Math.floor(Math.random() * 30) + 10; // +10% to +40%
             eventType = "success";
@@ -633,7 +633,7 @@ function endGame() {
     gameState.gameOver = true;
     
     const totalValue = gameState.funds + gameState.portfolioValue;
-    const roi = (totalValue / 2500000 - 1) * 100;
+    const roi = (totalValue / 3000000 - 1) * 100;
     
     let message = "";
     if (roi > 100) {
