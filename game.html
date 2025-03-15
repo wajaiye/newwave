@@ -328,119 +328,358 @@
     </footer>
 
     <script>
-        // Game state
-        const gameState = {
-            funds: 10000000,
-            portfolioValue: 0,
-            quarter: 1,
-            year: 2025,
-            maxQuarters: 20,
-            portfolio: [],
-            startups: [],
-            events: [],
-            gameOver: false
+  // Game state
+const gameState = {
+    funds: 10000000,
+    portfolioValue: 0,
+    quarter: 1,
+    year: 2025,
+    maxQuarters: 20,
+    portfolio: [],
+    startups: [],
+    events: [],
+    gameOver: false
+};
+
+// Startup categories
+const categories = [
+    "AI & Machine Learning",
+    "Biotech & Healthcare",
+    "Clean Energy",
+    "Fintech",
+    "E-commerce",
+    "SaaS",
+    "Edtech",
+    "Gaming",
+    "Cybersecurity",
+    "VR/AR"
+];
+
+// Startup name components
+const namePrefix = ["Nova", "Quantum", "Eco", "Cyber", "Meta", "Nexus", "Fusion", "Hyper", "Pulse", "Vortex", "Spark", "Horizon", "Apex", "Bright", "Atlas"];
+const nameSuffix = ["Tech", "Labs", "ify", "AI", "Works", "Sync", "Connect", "Link", "Logic", "Ware", "Hub", "Systems", "Nest", "Mind", "Flow"];
+
+// Event types
+const events = [
+    { type: "success", message: "{name} secured a major partnership with {partner}! Value increased by {percent}%." },
+    { type: "success", message: "{name} successfully launched their product! Value increased by {percent}%." },
+    { type: "success", message: "{name} attracted a top executive from {company}! Value increased by {percent}%." },
+    { type: "success", message: "{name} received positive media coverage! Value increased by {percent}%." },
+    { type: "failure", message: "{name} facing regulatory challenges. Value decreased by {percent}%." },
+    { type: "failure", message: "{name} competitor launched a superior product. Value decreased by {percent}%." },
+    { type: "failure", message: "{name} missed quarterly targets. Value decreased by {percent}%." },
+    { type: "failure", message: "{name} CEO resigned amid controversy. Value decreased by {percent}%." },
+    { type: "neutral", message: "{name} is restructuring their team. No change in value." },
+    { type: "neutral", message: "{name} is pivoting their business model. No change in value." }
+];
+
+// Big companies for events
+const bigCompanies = ["Google", "Amazon", "Microsoft", "Apple", "Meta", "Tesla", "IBM", "Oracle", "Salesforce", "Intel"];
+
+// DOM elements
+const fundsElement = document.getElementById("funds");
+const portfolioValueElement = document.getElementById("portfolio-value");
+const quarterElement = document.getElementById("quarter");
+const yearElement = document.getElementById("year");
+const startupsContainer = document.getElementById("startups");
+const eventsLogElement = document.getElementById("events-log");
+const nextQuarterButton = document.getElementById("next-quarter");
+const restartGameButton = document.getElementById("restart-game");
+const resultsModal = document.getElementById("results-modal");
+const resultsContent = document.getElementById("results-content");
+const newGameButton = document.getElementById("new-game");
+const closeModalButton = document.querySelector(".close");
+
+// Initialize game
+function initGame() {
+    gameState.funds = 10000000;
+    gameState.portfolioValue = 0;
+    gameState.quarter = 1;
+    gameState.year = 2025;
+    gameState.portfolio = [];
+    gameState.startups = [];
+    gameState.events = [{ type: "neutral", message: "Welcome to New Wave Investments! You have $10,000,000 to invest in promising startups." }];
+    gameState.gameOver = false;
+    
+    generateStartups();
+    updateUI();
+}
+
+// Generate random startups
+function generateStartups() {
+    gameState.startups = [];
+    const numStartups = Math.floor(Math.random() * 3) + 5; // 5-7 startups
+    
+    for (let i = 0; i < numStartups; i++) {
+        const name = `${namePrefix[Math.floor(Math.random() * namePrefix.length)]}${nameSuffix[Math.floor(Math.random() * nameSuffix.length)]}`;
+        const category = categories[Math.floor(Math.random() * categories.length)];
+        const risk = Math.floor(Math.random() * 5) + 1; // 1-5 risk level
+        const potential = Math.floor(Math.random() * 5) + 1; // 1-5 potential level
+        const cost = Math.floor((Math.random() * 1000000) + 500000); // $500k - $1.5M
+        
+        const descriptions = [
+            `A ${category} startup focusing on innovative solutions for modern problems.`,
+            `This ${category} company is changing the way we think about technology.`,
+            `A groundbreaking approach to ${category} with strong market potential.`,
+            `Disruptive ${category} technology with the potential to revolutionize the industry.`,
+            `An early-stage ${category} startup with a unique value proposition.`
+        ];
+        
+        const startup = {
+            id: i + 1,
+            name,
+            category,
+            description: descriptions[Math.floor(Math.random() * descriptions.length)],
+            risk,
+            potential,
+            cost,
+            valueMultiplier: 1,
+            invested: false
         };
+        
+        gameState.startups.push(startup);
+    }
+}
 
-        // Startup categories
-        const categories = [
-            "AI & Machine Learning",
-            "Biotech & Healthcare",
-            "Clean Energy",
-            "Fintech",
-            "E-commerce",
-            "SaaS",
-            "Edtech",
-            "Gaming",
-            "Cybersecurity",
-            "VR/AR"
-        ];
+// Update UI
+function updateUI() {
+    fundsElement.textContent = `$${formatNumber(gameState.funds)}`;
+    portfolioValueElement.textContent = `$${formatNumber(gameState.portfolioValue)}`;
+    quarterElement.textContent = gameState.quarter;
+    yearElement.textContent = gameState.year;
+    
+    renderStartups();
+    renderEvents();
+}
 
-        // Startup name components
-        const namePrefix = ["Nova", "Quantum", "Eco", "Cyber", "Meta", "Nexus", "Fusion", "Hyper", "Pulse", "Vortex", "Spark", "Horizon", "Apex", "Bright", "Atlas"];
-        const nameSuffix = ["Tech", "Labs", "ify", "AI", "Works", "Sync", "Connect", "Link", "Logic", "Ware", "Hub", "Systems", "Nest", "Mind", "Flow"];
+// Format number with commas
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
-        // Event types
-        const events = [
-            { type: "success", message: "{name} secured a major partnership with {partner}! Value increased by {percent}%." },
-            { type: "success", message: "{name} successfully launched their product! Value increased by {percent}%." },
-            { type: "success", message: "{name} attracted a top executive from {company}! Value increased by {percent}%." },
-            { type: "success", message: "{name} received positive media coverage! Value increased by {percent}%." },
-            { type: "failure", message: "{name} facing regulatory challenges. Value decreased by {percent}%." },
-            { type: "failure", message: "{name} competitor launched a superior product. Value decreased by {percent}%." },
-            { type: "failure", message: "{name} missed quarterly targets. Value decreased by {percent}%." },
-            { type: "failure", message: "{name} CEO resigned amid controversy. Value decreased by {percent}%." },
-            { type: "neutral", message: "{name} is restructuring their team. No change in value." },
-            { type: "neutral", message: "{name} is pivoting their business model. No change in value." }
-        ];
-
-        // Big companies for events
-        const bigCompanies = ["Google", "Amazon", "Microsoft", "Apple", "Meta", "Tesla", "IBM", "Oracle", "Salesforce", "Intel"];
-
-        // DOM elements
-        const fundsElement = document.getElementById("funds");
-        const portfolioValueElement = document.getElementById("portfolio-value");
-        const quarterElement = document.getElementById("quarter");
-        const yearElement = document.getElementById("year");
-        const startupsContainer = document.getElementById("startups");
-        const eventsLogElement = document.getElementById("events-log");
-        const nextQuarterButton = document.getElementById("next-quarter");
-        const restartGameButton = document.getElementById("restart-game");
-        const resultsModal = document.getElementById("results-modal");
-        const resultsContent = document.getElementById("results-content");
-        const newGameButton = document.getElementById("new-game");
-        const closeModalButton = document.querySelector(".close");
-
-        // Initialize game
-        function initGame() {
-            gameState.funds = 10000000;
-            gameState.portfolioValue = 0;
-            gameState.quarter = 1;
-            gameState.year = 2025;
-            gameState.portfolio = [];
-            gameState.startups = [];
-            gameState.events = [{ type: "neutral", message: "Welcome to New Wave Investments! You have $10,000,000 to invest in promising startups." }];
-            gameState.gameOver = false;
-            
-            generateStartups();
-            updateUI();
+// Render startups
+function renderStartups() {
+    startupsContainer.innerHTML = "";
+    
+    gameState.startups.forEach(startup => {
+        const startupCard = document.createElement("div");
+        startupCard.className = "startup-card";
+        
+        const riskStars = "★".repeat(startup.risk) + "☆".repeat(5 - startup.risk);
+        const potentialStars = "★".repeat(startup.potential) + "☆".repeat(5 - startup.potential);
+        
+        startupCard.innerHTML = `
+            <div class="startup-name">${startup.name}</div>
+            <div class="startup-description">${startup.description}</div>
+            <div class="startup-category">${startup.category}</div>
+            <div class="startup-stats">
+                <div class="startup-risk">Risk: ${riskStars}</div>
+                <div class="startup-potential">Potential: ${potentialStars}</div>
+            </div>
+            <div class="startup-cost">Cost: $${formatNumber(startup.cost)}</div>
+        `;
+        
+        const investButton = document.createElement("button");
+        investButton.className = "invest-btn";
+        
+        if (startup.invested) {
+            investButton.textContent = "Invested";
+            investButton.disabled = true;
+        } else {
+            investButton.textContent = "Invest";
+            investButton.disabled = gameState.funds < startup.cost;
+            investButton.addEventListener("click", () => investInStartup(startup.id));
         }
+        
+        startupCard.appendChild(investButton);
+        startupsContainer.appendChild(startupCard);
+    });
+}
 
-        // Generate random startups
-        function generateStartups() {
-            gameState.startups = [];
-            const numStartups = Math.floor(Math.random() * 3) + 5; // 5-7 startups
+// Render events
+function renderEvents() {
+    eventsLogElement.innerHTML = "";
+    
+    gameState.events.slice().reverse().forEach(event => {
+        const eventElement = document.createElement("div");
+        eventElement.className = `event event-${event.type}`;
+        eventElement.textContent = event.message;
+        eventsLogElement.appendChild(eventElement);
+    });
+}
+
+// Invest in startup
+function investInStartup(startupId) {
+    const startup = gameState.startups.find(s => s.id === startupId);
+    
+    if (startup && !startup.invested && gameState.funds >= startup.cost) {
+        startup.invested = true;
+        gameState.funds -= startup.cost;
+        gameState.portfolio.push(startup);
+        gameState.portfolioValue += startup.cost;
+        
+        gameState.events.push({
+            type: "neutral",
+            message: `You invested $${formatNumber(startup.cost)} in ${startup.name}.`
+        });
+        
+        updateUI();
+    }
+}
+
+// Advance to next quarter
+function advanceQuarter() {
+    if (gameState.gameOver) return;
+    
+    gameState.quarter++;
+    if (gameState.quarter > 4) {
+        gameState.quarter = 1;
+        gameState.year++;
+    }
+    
+    // Process existing investments
+    processInvestments();
+    
+    // Generate new startups if fewer than 3 available
+    if (gameState.startups.filter(s => !s.invested).length < 3) {
+        generateStartups();
+    }
+    
+    if (gameState.quarter === 1) {
+        gameState.events.push({
+            type: "neutral",
+            message: `New year ${gameState.year} has begun. New investment opportunities available!`
+        });
+    }
+    
+    // Check for game over
+    if (gameState.quarter + ((gameState.year - 2025) * 4) >= gameState.maxQuarters) {
+        endGame();
+    }
+    
+    updateUI();
+}
+
+// Process investment performance
+function processInvestments() {
+    gameState.portfolioValue = 0;
+    
+    gameState.portfolio.forEach(startup => {
+        // Calculate performance based on risk and potential
+        const performanceRoll = Math.random() * 100;
+        let valueChange = 0;
+        let eventType = "neutral";
+        let eventMessage = "";
+        
+        if (performanceRoll < 15 + (startup.risk * 5)) {
+            // Negative event
+            valueChange = -(Math.floor(Math.random() * 20) + 5); // -5% to -25%
+            eventType = "failure";
             
-            for (let i = 0; i < numStartups; i++) {
-                const name = `${namePrefix[Math.floor(Math.random() * namePrefix.length)]}${nameSuffix[Math.floor(Math.random() * nameSuffix.length)]}`;
-                const category = categories[Math.floor(Math.random() * categories.length)];
-                const risk = Math.floor(Math.random() * 5) + 1; // 1-5 risk level
-                const potential = Math.floor(Math.random() * 5) + 1; // 1-5 potential level
-                const cost = Math.floor((Math.random() * 1000000) + 500000); // $500k - $1.5M
-                
-                const descriptions = [
-                    `A ${category} startup focusing on innovative solutions for modern problems.`,
-                    `This ${category} company is changing the way we think about technology.`,
-                    `A groundbreaking approach to ${category} with strong market potential.`,
-                    `Disruptive ${category} technology with the potential to revolutionize the industry.`,
-                    `An early-stage ${category} startup with a unique value proposition.`
-                ];
-                
-                const startup = {
-                    id: i + 1,
-                    name,
-                    category,
-                    description: descriptions[Math.floor(Math.random() * descriptions.length)],
-                    risk,
-                    potential,
-                    cost,
-                    valueMultiplier: 1,
-                    invested: false
-                };
-                
-                gameState.startups.push(startup);
-            }
+            const eventIndex = Math.floor(Math.random() * events.filter(e => e.type === "failure").length);
+            const event = events.filter(e => e.type === "failure")[eventIndex];
+            
+            eventMessage = event.message
+                .replace("{name}", startup.name)
+                .replace("{percent}", Math.abs(valueChange))
+                .replace("{company}", bigCompanies[Math.floor(Math.random() * bigCompanies.length)]);
+        } else if (performanceRoll > 85 - (startup.potential * 5)) {
+            // Positive event
+            valueChange = Math.floor(Math.random() * 30) + 10; // +10% to +40%
+            eventType = "success";
+            
+            const eventIndex = Math.floor(Math.random() * events.filter(e => e.type === "success").length);
+            const event = events.filter(e => e.type === "success")[eventIndex];
+            
+            eventMessage = event.message
+                .replace("{name}", startup.name)
+                .replace("{percent}", valueChange)
+                .replace("{partner}", bigCompanies[Math.floor(Math.random() * bigCompanies.length)])
+                .replace("{company}", bigCompanies[Math.floor(Math.random() * bigCompanies.length)]);
+        } else {
+            // Neutral event
+            valueChange = Math.floor(Math.random() * 10) - 2; // -2% to +8%
+            eventType = "neutral";
+            
+            const eventIndex = Math.floor(Math.random() * events.filter(e => e.type === "neutral").length);
+            const event = events.filter(e => e.type === "neutral")[eventIndex];
+            
+            eventMessage = event.message
+                .replace("{name}", startup.name);
         }
+        
+        // Apply value change
+        startup.valueMultiplier *= (1 + (valueChange / 100));
+        
+        // Add event to log if significant
+        if (eventType !== "neutral" || Math.random() < 0.3) {
+            gameState.events.push({
+                type: eventType,
+                message: eventMessage
+            });
+        }
+        
+        // Calculate new value
+        gameState.portfolioValue += startup.cost * startup.valueMultiplier;
+    });
+    
+    // Round portfolio value to whole number
+    gameState.portfolioValue = Math.round(gameState.portfolioValue);
+}
 
-        // Update UI
-        function updateUI() {
-            fundsElement.textContent = `$
+// End game
+function endGame() {
+    gameState.gameOver = true;
+    
+    const totalValue = gameState.funds + gameState.portfolioValue;
+    const roi = (totalValue / 10000000 - 1) * 100;
+    
+    let message = "";
+    if (roi > 100) {
+        message = "Extraordinary performance! You're a venture capital legend!";
+    } else if (roi > 50) {
+        message = "Outstanding results! You have a natural talent for venture capital.";
+    } else if (roi > 25) {
+        message = "Solid performance! Your investment strategy paid off.";
+    } else if (roi > 0) {
+        message = "Decent results. You made a profit, but there's room for improvement.";
+    } else if (roi > -25) {
+        message = "Mixed results. You took some risks that didn't pay off.";
+    } else {
+        message = "Challenging outcome. Perhaps try a different investment strategy next time.";
+    }
+    
+    resultsContent.innerHTML = `
+        <p>Game Over! Here are your results:</p>
+        <p>Starting Capital: $10,000,000</p>
+        <p>Final Portfolio Value: $${formatNumber(gameState.portfolioValue)}</p>
+        <p>Cash on Hand: $${formatNumber(gameState.funds)}</p>
+        <p>Total Value: $${formatNumber(totalValue)}</p>
+        <p>Return on Investment: ${roi.toFixed(1)}%</p>
+        <p>${message}</p>
+    `;
+    
+    resultsModal.style.display = "block";
+}
+
+// Event listeners
+nextQuarterButton.addEventListener("click", advanceQuarter);
+restartGameButton.addEventListener("click", initGame);
+newGameButton.addEventListener("click", () => {
+    resultsModal.style.display = "none";
+    initGame();
+});
+closeModalButton.addEventListener("click", () => {
+    resultsModal.style.display = "none";
+});
+
+// Close modal when clicking outside
+window.addEventListener("click", (event) => {
+    if (event.target === resultsModal) {
+        resultsModal.style.display = "none";
+    }
+});
+
+// Initialize the game
+initGame();
+        </script>
