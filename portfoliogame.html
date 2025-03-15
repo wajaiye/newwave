@@ -431,97 +431,75 @@ const gameState = {
 };
 
 // Asset classes with realistic risk/return profiles
+// Asset classes with realistic risk/return profiles
 const assetClasses = [
     {
         id: 1,
-        name: "US Large Cap Stocks",
-        description: "Large American companies with established market positions.",
-        risk: 3,
-        potential: 4,
-        volatility: 16,
-        expectedReturn: 9.5,
+        name: "Private Equity",
+        description: "Investments in privately held companies through buyouts or growth capital.",
+        risk: 4,
+        potential: 5,
+        volatility: 20,
+        expectedReturn: 12.5,
         allocation: 0,
         color: "#3498db"
     },
     {
         id: 2,
-        name: "US Small Cap Stocks",
-        description: "Smaller American companies with higher growth potential.",
-        risk: 4,
-        potential: 5,
-        volatility: 22,
-        expectedReturn: 11.5,
+        name: "Real Estate",
+        description: "Direct ownership of commercial, residential, or industrial properties.",
+        risk: 3,
+        potential: 4,
+        volatility: 15,
+        expectedReturn: 8.5,
         allocation: 0,
         color: "#2980b9"
     },
     {
         id: 3,
-        name: "International Developed Stocks",
-        description: "Large companies from developed markets outside the US.",
-        risk: 3,
+        name: "Hedge Funds",
+        description: "Actively managed investment pools using diverse strategies and instruments.",
+        risk: 4,
         potential: 4,
-        volatility: 18,
-        expectedReturn: 8.5,
+        volatility: 12,
+        expectedReturn: 7.5,
         allocation: 0,
         color: "#27ae60"
     },
     {
         id: 4,
-        name: "Emerging Market Stocks",
-        description: "Companies from developing economies with high growth potential.",
-        risk: 5,
-        potential: 5,
-        volatility: 26,
-        expectedReturn: 11.0,
+        name: "Private Credit",
+        description: "Direct lending to private companies, often with floating rates and seniority.",
+        risk: 3,
+        potential: 3,
+        volatility: 10,
+        expectedReturn: 8.0,
         allocation: 0,
         color: "#16a085"
     },
     {
         id: 5,
-        name: "Government Bonds",
-        description: "Fixed income securities issued by the US government.",
-        risk: 1,
-        potential: 2,
-        volatility: 5,
-        expectedReturn: 3.5,
+        name: "Venture Capital",
+        description: "Early-stage investments in startups with high growth potential.",
+        risk: 5,
+        potential: 5,
+        volatility: 30,
+        expectedReturn: 15.0,
         allocation: 0,
         color: "#f1c40f"
     },
     {
         id: 6,
-        name: "Corporate Bonds",
-        description: "Fixed income securities issued by corporations.",
-        risk: 2,
-        potential: 3,
-        volatility: 8,
-        expectedReturn: 5.0,
+        name: "Bitcoin",
+        description: "Digital cryptocurrency with finite supply and high volatility.",
+        risk: 5,
+        potential: 5,
+        volatility: 75,
+        expectedReturn: 20.0,
         allocation: 0,
         color: "#e67e22"
-    },
-    {
-        id: 7,
-        name: "Real Estate (REITs)",
-        description: "Real Estate Investment Trusts that own and manage properties.",
-        risk: 3,
-        potential: 4,
-        volatility: 15,
-        expectedReturn: 8.0,
-        allocation: 0,
-        color: "#e74c3c"
-    },
-    {
-        id: 8,
-        name: "Cash & Equivalents",
-        description: "Money market funds and short-term liquid investments.",
-        risk: 1,
-        potential: 1,
-        volatility: 1,
-        expectedReturn: 2.0,
-        allocation: 0,
-        color: "#95a5a6"
     }
 ];
-
 // Market event types
 const marketEvents = [
     // Positive events
@@ -583,11 +561,12 @@ const marketEvents = [
 
 // Investment profiles for quick allocation
 const investmentProfiles = {
-    conservative: [10, 0, 5, 0, 35, 25, 5, 20],
-    moderatelyConservative: [20, 5, 10, 0, 25, 20, 10, 10],
-    moderate: [30, 10, 15, 5, 15, 15, 5, 5],
-    moderatelyAggressive: [35, 15, 20, 10, 5, 5, 7, 3],
-    aggressive: [40, 20, 20, 15, 0, 0, 5, 0]
+    // [Private Equity, Real Estate, Hedge Funds, Private Credit, Venture Capital, Bitcoin]
+    conservative: [5, 15, 10, 60, 0, 10],
+    moderatelyConservative: [10, 20, 15, 45, 5, 5],
+    moderate: [20, 20, 20, 25, 10, 5],
+    moderatelyAggressive: [30, 15, 15, 15, 15, 10],
+    aggressive: [35, 10, 10, 5, 25, 15]
 };
 
 // DOM elements
