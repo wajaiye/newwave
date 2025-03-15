@@ -1,346 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>New Wave Investments</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
-    }
-    
-    body {
-      background-color: #1a1e2e;
-      color: white;
-      overflow-x: hidden;
-    }
-    
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      background-color: rgba(26, 30, 46, 0.9);
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 1000;
-    }
-    
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: white;
-      text-decoration: none;
-      letter-spacing: 1px;
-    }
-    
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-    }
-    
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      font-size: 1rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-    
-    .cta-button {
-      background-color: white;
-      color: #1a1e2e;
-      padding: 0.5rem 1.5rem;
-      border: none;
-      border-radius: 25px;
-      font-weight: bold;
-      cursor: pointer;
-      letter-spacing: 1px;
-    }
-    
-    .hero {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 0 2rem;
-      background: linear-gradient(rgba(26, 30, 46, 0.7), rgba(26, 30, 46, 0.7)), url('wave-bg.jpg');
-      background-size: cover;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .hero::before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 30%;
-      background-image: url('wave-overlay.png');
-      background-size: cover;
-      z-index: 1;
-    }
-    
-    .hero h1 {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-      z-index: 2;
-    }
-    
-    .hero h2 {
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      font-weight: normal;
-      z-index: 2;
-    }
-    
-    .hero p {
-      font-size: 1rem;
-      max-width: 800px;
-      margin-bottom: 2rem;
-      opacity: 0.8;
-      z-index: 2;
-    }
-    
-    .categories {
-      padding: 4rem 2rem;
-      text-align: center;
-    }
-    
-    .category-icons {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin: 3rem 0;
-      flex-wrap: wrap;
-    }
-    
-    .category-icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 150px;
-    }
-    
-    .icon-circle {
-      width: 100px;
-      height: 100px;
-      background-color: #2a3141;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-    
-    .icon-circle img {
-      width: 50px;
-      height: 50px;
-    }
-    
-    .category-icon h3 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .category-icon p {
-      font-size: 0.9rem;
-      opacity: 0.7;
-    }
-    
-    .details {
-      padding: 4rem 2rem;
-      background-color: #16192a;
-    }
-    
-    .details-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    .detail-card {
-      background-color: #1a1e2e;
-      border-radius: 10px;
-      padding: 2rem;
-      text-align: center;
-    }
-    
-    .detail-card img {
-      width: 100px;
-      height: 100px;
-      margin-bottom: 1rem;
-    }
-    
-    .detail-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    
-    .detail-card p {
-      font-size: 0.9rem;
-      opacity: 0.7;
-    }
-    
-    .wave-bg {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      z-index: -1;
-    }
-    
-    .dollar-icon {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      background-color: #2a3141;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    
-    .dollar-1 {
-      top: 30%;
-      left: 20%;
-    }
-    
-    .dollar-2 {
-      top: 50%;
-      left: 30%;
-    }
-    
-    .dollar-3 {
-      top: 40%;
-      right: 20%;
-    }
-    
-    @media (max-width: 768px) {
-      .navbar {
-        flex-direction: column;
-        padding: 1rem;
-      }
-      
-      .nav-links {
-        margin-top: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      
-      .hero h1 {
-        font-size: 2.5rem;
-      }
-      
-      .hero h2 {
-        font-size: 1.5rem;
-      }
-      
-      .category-icons {
-        gap: 1rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Wave Investments - Alternative Investing Made Simple</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+        header { background: #0a2540; color: #fff; padding: 20px; text-align: center; }
+        .hero { padding: 50px 20px; text-align: center; background: #1c3b5e; color: white; }
+        .hero h1 { font-size: 2.5rem; }
+        .hero p { font-size: 1.2rem; margin-top: 10px; }
+        .cta { margin-top: 20px; display: inline-block; background: #ff9800; color: #fff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-size: 1.2rem; }
+        .features { display: flex; justify-content: center; flex-wrap: wrap; padding: 40px 20px; background: white; }
+        .feature { width: 300px; margin: 20px; padding: 20px; text-align: center; background: #eef2f3; border-radius: 8px; }
+        .footer { text-align: center; padding: 20px; background: #0a2540; color: white; margin-top: 20px; }
+    </style>
 </head>
 <body>
-  <nav class="navbar">
-    <a href="#" class="logo">NEW WAVE INVESTMENTS</a>
-    <div class="nav-links">
-      <a href="#">Home</a>
-      <a href="#">Investments</a>
-      <a href="#">About</a>
-    </div>
-    <button class="cta-button">GET STARTED</button>
-  </nav>
-  
-  <section class="hero">
-    <h1>New Wave Investments</h1>
-    <h2>Master Diversify Your Portfolio</h2>
-    <p>Investing has never been easier with our best investments for beginners and experienced investors who can either enter requited money. You can have better return range.</p>
-    <button class="cta-button">GET STARTED</button>
+    <header>
+        <h1>New Wave Investments</h1>
+    </header>
     
-    <div class="dollar-icon dollar-1">$</div>
-    <div class="dollar-icon dollar-2">$</div>
-    <div class="dollar-icon dollar-3">$</div>
-  </section>
-  
-  <section class="categories">
-    <div class="category-icons">
-      <div class="category-icon">
-        <div class="icon-circle">
-          <img src="/api/placeholder/50/50" alt="Real Estate Icon">
+    <section class="hero">
+        <h1>Alternative Investing, Simplified</h1>
+        <p>Diversify your portfolio with real estate, private equity, private credit, venture capital, and hedge funds.</p>
+        <a href="#" class="cta">Get Started</a>
+    </section>
+    
+    <section class="features">
+        <div class="feature">
+            <h2>Private Equity</h2>
+            <p>Invest in private companies and unlock high-growth potential opportunities.</p>
         </div>
-        <h3>Real Estate</h3>
-      </div>
-      
-      <div class="category-icon">
-        <div class="icon-circle">
-          <img src="/api/placeholder/50/50" alt="Private Types Icon">
+        <div class="feature">
+            <h2>Real Estate</h2>
+            <p>Explore income-generating properties and commercial real estate investments.</p>
         </div>
-        <h3>Private Types</h3>
-      </div>
-      
-      <div class="category-icon">
-        <div class="icon-circle">
-          <img src="/api/placeholder/50/50" alt="Hedge Equity Types Icon">
+        <div class="feature">
+            <h2>Private Credit</h2>
+            <p>Gain access to exclusive private lending and structured credit investments.</p>
         </div>
-        <h3>Hedge Equity Types</h3>
-      </div>
-      
-      <div class="category-icon">
-        <div class="icon-circle">
-          <img src="/api/placeholder/50/50" alt="Communities Icon">
+        <div class="feature">
+            <h2>Venture Capital</h2>
+            <p>Back early-stage startups and innovative businesses with high growth potential.</p>
         </div>
-        <h3>Communities</h3>
-      </div>
-      
-      <div class="category-icon">
-        <div class="icon-circle">
-          <img src="/api/placeholder/50/50" alt="Guides Data Icon">
+        <div class="feature">
+            <h2>Hedge Funds</h2>
+            <p>Diversify your portfolio with actively managed hedge fund strategies.</p>
         </div>
-        <h3>Guides Data</h3>
-      </div>
-    </div>
-  </section>
-  
-  <section class="details">
-    <div class="details-grid">
-      <div class="detail-card">
-        <img src="/api/placeholder/100/100" alt="Real Estate Types">
-        <h3>Real Estate Types</h3>
-        <p>Variety of options ranging from residential to commercial real estate options that offer consistent returns.</p>
-      </div>
-      
-      <div class="detail-card">
-        <img src="/api/placeholder/100/100" alt="Private Equity Hedge Funds">
-        <h3>Private Equity Hedge Funds</h3>
-        <p>Manage your capital investment strategy with sophisticated closed-ended investment opportunities.</p>
-      </div>
-      
-      <div class="detail-card">
-        <img src="/api/placeholder/100/100" alt="Communities Types">
-        <h3>Communities Types</h3>
-        <p>Discover shared investment opportunities and collaborate with like-minded investors.</p>
-      </div>
-      
-      <div class="detail-card">
-        <img src="/api/placeholder/100/100" alt="Communities Community">
-        <h3>Communities Community</h3>
-        <p>Join investment groups that share similar investment goals and strategies.</p>
-      </div>
-    </div>
-  </section>
+    </section>
+    
+    <footer class="footer">
+        <p>&copy; 2025 New Wave Investments. All Rights Reserved.</p>
+    </footer>
 </body>
 </html>
