@@ -282,7 +282,7 @@
         <div class="game-stats">
             <div class="stat">
                 <div class="stat-label">Available Funds</div>
-                <div class="stat-value" id="funds">$10,000,000</div>
+                <div class="stat-value" id="funds">$2,500,000</div>
             </div>
             <div class="stat">
                 <div class="stat-label">Portfolio Value</div>
@@ -290,7 +290,7 @@
             </div>
             <div class="stat">
                 <div class="stat-label">Quarter</div>
-                <div class="stat-value" id="quarter">1</div>
+                <div class="stat-value" id="quarter">2</div>
             </div>
             <div class="stat">
                 <div class="stat-label">Year</div>
@@ -310,7 +310,7 @@
         
         <h2>Events Log</h2>
         <div class="events-log" id="events-log">
-            <div class="event event-neutral">Welcome to New Wave Investments! You have $10,000,000 to invest in promising startups.</div>
+            <div class="event event-neutral">Welcome to New Wave Investments! You have $2,500,000 to invest in promising startups.</div>
         </div>
         
         <div id="results-modal" class="modal">
@@ -332,7 +332,7 @@
 const gameState = {
     funds: 2500000,
     portfolioValue: 0,
-    quarter: 1,
+    quarter: 2,
     year: 2025,
     maxQuarters: 4,
     portfolio: [],
@@ -408,14 +408,14 @@ function initGame() {
 // Generate random startups
 function generateStartups() {
     gameState.startups = [];
-    const numStartups = Math.floor(Math.random() * 3) + 5; // 5-7 startups
+    const numStartups =  4; //  Math.floor(Math.random() * 3) + 5;  5-7 startups
     
     for (let i = 0; i < numStartups; i++) {
         const name = `${namePrefix[Math.floor(Math.random() * namePrefix.length)]}${nameSuffix[Math.floor(Math.random() * nameSuffix.length)]}`;
         const category = categories[Math.floor(Math.random() * categories.length)];
         const risk = Math.floor(Math.random() * 5) + 1; // 1-5 risk level
         const potential = Math.floor(Math.random() * 5) + 1; // 1-5 potential level
-        const cost = Math.floor((Math.random() * 1000000) + 500000); // $500k - $1.5M
+        const cost = Math.floor((Math.random() * 1000000) + 1000000); // $1M - $2M
         
         const descriptions = [
             `A ${category} startup focusing on innovative solutions for modern problems.`,
@@ -573,7 +573,7 @@ function processInvestments() {
         
         if (performanceRoll < 50 + (startup.risk * 5)) {
             // Negative event
-            valueChange = -(Math.floor(Math.random() * 40) + 5); // -5% to -45%
+            valueChange = -(Math.floor(Math.random() * 50) + 5); // -5% to -55%
             eventType = "failure";
             
             const eventIndex = Math.floor(Math.random() * events.filter(e => e.type === "failure").length);
@@ -632,7 +632,7 @@ function endGame() {
     gameState.gameOver = true;
     
     const totalValue = gameState.funds + gameState.portfolioValue;
-    const roi = (totalValue / 10000000 - 1) * 100;
+    const roi = (totalValue / 2500000 - 1) * 100;
     
     let message = "";
     if (roi > 100) {
@@ -651,7 +651,7 @@ function endGame() {
     
     resultsContent.innerHTML = `
         <p>Game Over! Here are your results:</p>
-        <p>Starting Capital: $10,000,000</p>
+        <p>Starting Capital: $2,500,000</p>
         <p>Final Portfolio Value: $${formatNumber(gameState.portfolioValue)}</p>
         <p>Cash on Hand: $${formatNumber(gameState.funds)}</p>
         <p>Total Value: $${formatNumber(totalValue)}</p>
