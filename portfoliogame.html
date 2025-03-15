@@ -1,1 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Allocation Portfolio Game</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .game-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .game-header h1 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: var(--light-color);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .allocation-container {
+            margin-bottom: 2rem;
+        }
+        
+        .asset-class {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .asset-class:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .asset-details {
+            flex-grow: 1;
+            margin-right: 1rem;
+        }
+        
+        .asset-name {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .asset-description {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .asset-risk, .asset-potential {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+        
+        .asset-risk {
+            color: var(--danger-color);
+        }
+        
+        .asset-potential {
+            color: var(--success-color);
+        }
+        
+        .allocation-slider {
+            width: 150px;
+            margin: 0 1rem;
+        }
+        
+        .allocation-value {
+            width: 60px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .allocation-amount {
+            width: 120px;
+            text-align: right;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-primary:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .events-log {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .event {
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .event-success {
+            color: var(--success-color);
+        }
+        
+        .event-failure {
+            color: var(--danger-color);
+        }
+        
+        .event-neutral {
+            color: var(--primary-color);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        
+        .modal-title {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .allocation-summary {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        
+        .portfolio-chart {
+            height: 30px;
+            display: flex;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .chart-segment {
+            height: 100%;
+        }
+        
+        .error-message {
+            padding: 0.5rem;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 4px;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        .asset-class-meta {
+            display: flex;
+            margin-top: 0.5rem;
+            gap: 1rem;
+        }
+        
+        .profile-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .profile-btn {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            background-color: white;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-btn:hover, .profile-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .results-chart {
+            width: 100%;
+            height: 300px;
+            margin: 1rem 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .game-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .asset-class {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .allocation-controls {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                margin-top: 0.5rem;
+            }
+            
+            .allocation-slider {
+                flex-grow: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-text">Portfolio Builder</div>
+    </header>
+    
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Portfolio Allocation Game</h1>
+            <p>Allocate your investments, see how they perform over 4 quarters, and become a successful investor!</p>
+        </div>
+        
+        <div class="game-stats">
+            <div class="stat">
+                <div class="stat-label">Starting Capital</div>
+                <div class="stat-value" id="capital">$100,000</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Portfolio Value</div>
+                <div class="stat-value" id="portfolio-value">$0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Quarter</div>
+                <div class="stat-value" id="quarter">0</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Year</div>
+                <div class="stat-value" id="year">2025</div>
+            </div>
+        </div>
+        
+        <div class="error-message" id="error-message">
+            Your allocation must equal 100% to start the game.
+        </div>
+        
+        <div class="profile-buttons">
+            <button class="profile-btn" data-profile="conservative">Conservative</button>
+            <button class="profile-btn" data-profile="moderatelyConservative">Moderately Conservative</button>
+            <button class="profile-btn" data-profile="moderate">Moderate</button>
+            <button class="profile-btn" data-profile="moderatelyAggressive">Moderately Aggressive</button>
+            <button class="profile-btn" data-profile="aggressive">Aggressive</button>
+        </div>
+        
+        <div class="allocation-summary">
+            <h3>Portfolio Allocation</h3>
+            <div class="portfolio-chart" id="portfolio-chart"></div>
+            <div id="allocation-total">Total Allocation: 0%</div>
+        </div>
+        
+        <h2>Asset Classes</h2>
+        <div class="allocation-container" id="allocation-container">
+            <!-- Asset classes will be generated here -->
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="start-game">Start Simulation</button>
+            <button class="btn btn-primary" id="restart-game">Reset</button>
+        </div>
+        
+        <h2>Market Events</h2>
+        <div class="events-log" id="events-log">
+            <div class="event event-neutral">Welcome to the Portfolio Allocation Game! Allocate your $100,000 across different asset classes.</div>
+        </div>
+        
+        <div id="results-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 class="modal-title">Simulation Results</h2>
+                <div id="results-content"></div>
+                <div class="results-chart" id="results-chart"></div>
+                <button class="btn btn-primary" id="new-game">Start New Game</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Portfolio Builder. All Rights Reserved.</p>
+    </footer>
 
+<script>
+  // Game state
+const gameState = {
+    capital: 100000,
+    portfolioValue: 0,
+    quarter: 0,
+    year: 2025,
+    maxQuarters: 4,
+    allocation: [],
+    events: [],
+    quarterlyReturns: [],
+    gameStarted: false,
+    gameOver: false
+};
+
+// Asset classes with realistic risk/return profiles
+const assetClasses = [
+    {
+        id: 1,
+        name: "US Large Cap Stocks",
+        description: "Large American companies with established market positions.",
+        risk: 3,
+        potential: 4,
+        volatility: 16,
+        expectedReturn: 9.5,
+        allocation: 0,
+        color: "#3498db"
+    },
+    {
+        id: 2,
+        name: "US Small Cap Stocks",
+        description: "Smaller American companies with higher growth potential.",
+        risk: 4,
+        potential: 5,
+        volatility: 22,
+        expectedReturn: 11.5,
+        allocation: 0,
+        color: "#2980b9"
+    },
+    {
+        id: 3,
+        name: "International Developed Stocks",
+        description: "Large companies from developed markets outside the US.",
+        risk: 3,
+        potential: 4,
+        volatility: 18,
+        expectedReturn: 8.5,
+        allocation: 0,
+        color: "#27ae60"
+    },
+    {
+        id: 4,
+        name: "Emerging Market Stocks",
+        description: "Companies from developing economies with high growth potential.",
+        risk: 5,
+        potential: 5,
+        volatility: 26,
+        expectedReturn: 11.0,
+        allocation: 0,
+        color: "#16a085"
+    },
+    {
+        id: 5,
+        name: "Government Bonds",
+        description: "Fixed income securities issued by the US government.",
+        risk: 1,
+        potential: 2,
+        volatility: 5,
+        expectedReturn: 3.5,
+        allocation: 0,
+        color: "#f1c40f"
+    },
+    {
+        id: 6,
+        name: "Corporate Bonds",
+        description: "Fixed income securities issued by corporations.",
+        risk: 2,
+        potential: 3,
+        volatility: 8,
+        expectedReturn: 5.0,
+        allocation: 0,
+        color: "#e67e22"
+    },
+    {
+        id: 7,
+        name: "Real Estate (REITs)",
+        description: "Real Estate Investment Trusts that own and manage properties.",
+        risk: 3,
+        potential: 4,
+        volatility: 15,
+        expectedReturn: 8.0,
+        allocation: 0,
+        color: "#e74c3c"
+    },
+    {
+        id: 8,
+        name: "Cash & Equivalents",
+        description: "Money market funds and short-term liquid investments.",
+        risk: 1,
+        potential: 1,
+        volatility: 1,
+        expectedReturn: 2.0,
+        allocation: 0,
+        color: "#95a5a6"
+    }
+];
+
+// Market event types
+const marketEvents = [
+    // Positive events
+    { 
+        type: "success", 
+        message: "Economic expansion exceeds expectations. {asset} gained {percent}%.",
+        impactFactors: { stocks: 1.5, bonds: 0.5, alternatives: 1.0 }
+    },
+    { 
+        type: "success", 
+        message: "Fed signals market-friendly policy. {asset} gained {percent}%.",
+        impactFactors: { stocks: 1.2, bonds: 1.8, alternatives: 1.0 }
+    },
+    { 
+        type: "success", 
+        message: "Strong corporate earnings reports. {asset} gained {percent}%.",
+        impactFactors: { stocks: 1.8, bonds: 0.3, alternatives: 0.8 }
+    },
+    { 
+        type: "success", 
+        message: "Consumer confidence reaches new highs. {asset} gained {percent}%.",
+        impactFactors: { stocks: 1.3, bonds: 0.5, alternatives: 1.2 }
+    },
+    
+    // Negative events
+    { 
+        type: "failure", 
+        message: "Market correction amid valuation concerns. {asset} dropped {percent}%.",
+        impactFactors: { stocks: 1.8, bonds: 0.4, alternatives: 1.2 }
+    },
+    { 
+        type: "failure", 
+        message: "Inflation data exceeds expectations. {asset} dropped {percent}%.",
+        impactFactors: { stocks: 1.2, bonds: 1.5, alternatives: 1.0 }
+    },
+    { 
+        type: "failure", 
+        message: "Geopolitical tensions disrupt markets. {asset} dropped {percent}%.",
+        impactFactors: { stocks: 1.4, bonds: 0.8, alternatives: 1.3 }
+    },
+    { 
+        type: "failure", 
+        message: "Economic indicators suggest slowdown. {asset} dropped {percent}%.",
+        impactFactors: { stocks: 1.5, bonds: 0.6, alternatives: 1.1 }
+    },
+    
+    // Neutral events
+    { 
+        type: "neutral", 
+        message: "Markets digest mixed economic data. {asset} moved sideways.",
+        impactFactors: { stocks: 0.3, bonds: 0.3, alternatives: 0.3 }
+    },
+    { 
+        type: "neutral", 
+        message: "Central bank maintains current policy. No significant impact on {asset}.",
+        impactFactors: { stocks: 0.2, bonds: 0.2, alternatives: 0.2 }
+    }
+];
+
+// Investment profiles for quick allocation
+const investmentProfiles = {
+    conservative: [10, 0, 5, 0, 35, 25, 5, 20],
+    moderatelyConservative: [20, 5, 10, 0, 25, 20, 10, 10],
+    moderate: [30, 10, 15, 5, 15, 15, 5, 5],
+    moderatelyAggressive: [35, 15, 20, 10, 5, 5, 7, 3],
+    aggressive: [40, 20, 20, 15, 0, 0, 5, 0]
+};
+
+// DOM elements
+const capitalElement = document.getElementById("capital");
+const portfolioValueElement = document.getElementById("portfolio-value");
+const quarterElement = document.getElementById("quarter");
+const yearElement = document.getElementById("year");
+const allocationContainer = document.getElementById("allocation-container");
+const portfolioChart = document.getElementById("portfolio-chart");
+const allocationTotal = document.getElementById("allocation-total");
+const eventsLogElement = document.getElementById("events-log");
+const startGameButton = document.getElementById("start-game");
+const restartGameButton = document.getElementById("restart-game");
+const resultsModal = document.getElementById("results-modal");
+const resultsContent = document.getElementById("results-content");
+const resultsChart = document.getElementById("results-chart");
+const newGameButton = document.getElementById("new-game");
+const closeModalButton = document.querySelector(".close");
+const errorMessage = document.getElementById("error-message");
+const profileButtons = document.querySelectorAll(".profile-btn");
+
+// Initialize game
+function initGame() {
+    gameState.capital = 100000;
+    gameState.portfolioValue = 0;
+    gameState.quarter = 0;
+    gameState.year = 2025;
+    gameState.allocation = JSON.parse(JSON.stringify(assetClasses));
+    gameState.events = [{ 
+        type: "neutral", 
+        message: "Welcome to the Portfolio Allocation Game! Allocate your $100,000 across different asset classes." 
+    }];
+    gameState.quarterlyReturns = [];
+    gameState.gameStarted = false;
+    gameState.gameOver = false;
+    
+    // Reset allocations
+    gameState.allocation.forEach(asset => {
+        asset.allocation = 0;
+    });
+    
+    updateUI();
+    renderAssetClasses();
+    errorMessage.style.display = "none";
+    startGameButton.disabled = false;
+    
+    // Enable sliders
+    const sliders = document.querySelectorAll(".allocation-slider");
+    sliders.forEach(slider => {
+        slider.disabled = false;
+    });
+}
+
+// Format number with commas
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// Render asset classes
+function renderAssetClasses() {
+    allocationContainer.innerHTML = "";
+    
+    gameState.allocation.forEach(asset => {
+        const assetClass = document.createElement("div");
+        assetClass.className = "asset-class";
+        
+        const riskStars = "★".repeat(asset.risk) + "☆".repeat(5 - asset.risk);
+        const potentialStars = "★".repeat(asset.potential) + "☆".repeat(5 - asset.potential);
+        
+        assetClass.innerHTML = `
+            <div class="asset-details">
+                <div class="asset-name">${asset.name}</div>
+                <div class="asset-description">${asset.description}</div>
+                <div class="asset-class-meta">
+                    <div class="asset-risk">Risk: ${riskStars}</div>
+                    <div class="asset-potential">Potential: ${potentialStars}</div>
+                </div>
+            </div>
+            <div class="allocation-controls">
+                <input type="range" min="0" max="100" value="${asset.allocation}" class="allocation-slider" id="slider-${asset.id}" ${gameState.gameStarted ? 'disabled' : ''}>
+                <div class="allocation-value">${asset.allocation}%</div>
+                <div class="allocation-amount">$${formatNumber(Math.round(gameState.capital * asset.allocation / 100))}</div>
+            </div>
+        `;
+        
+        allocationContainer.appendChild(assetClass);
+        
+        // Add event listener to slider
+        const slider = assetClass.querySelector(`#slider-${asset.id}`);
+        const valueDisplay = assetClass.querySelector(".allocation-value");
+        const amountDisplay = assetClass.querySelector(".allocation-amount");
+        
+        slider.addEventListener("input", () => {
+            const newValue = parseInt(slider.value);
+            asset.allocation = newValue;
+            valueDisplay.textContent = `${newValue}%`;
+            amountDisplay.textContent = `$${formatNumber(Math.round(gameState.capital * newValue / 100))}`;
+            updateAllocationChart();
+        });
+    });
+    
+    updateAllocationChart();
+}
+
+// Update allocation chart
+function updateAllocationChart() {
+    portfolioChart.innerHTML = "";
+    let totalAllocation = 0;
+    
+    gameState.allocation.forEach(asset => {
+        if (asset.allocation > 0) {
+            const segment = document.createElement("div");
+            segment.className = "chart-segment";
+            segment.style.width = `${asset.allocation}%`;
+            segment.style.backgroundColor = asset.color;
+            segment.title = `${asset.name}: ${asset.allocation}%`;
+            portfolioChart.appendChild(segment);
+            totalAllocation += asset.allocation;
+        }
+    });
+    
+    allocationTotal.textContent = `Total Allocation: ${totalAllocation}%`;
+    
+    // Enable/disable start button based on total allocation
+    startGameButton.disabled = (totalAllocation !== 100 || gameState.gameStarted);
+    
+    // Show error message if game is not started and allocation is not 100%
+    if (!gameState.gameStarted) {
+        errorMessage.style.display = (totalAllocation !== 100) ? "block" : "none";
+    }
+}
+
+// Render events
+function renderEvents() {
+    eventsLogElement.innerHTML = "";
+    
+    gameState.events.slice().reverse().forEach(event => {
+        const eventElement = document.createElement("div");
+        eventElement.className = `event event-${event.type}`;
+        eventElement.textContent = event.message;
+        eventsLogElement.appendChild(eventElement);
+    });
+}
+
+// Update UI
+function updateUI() {
+    capitalElement.textContent = `$${formatNumber(gameState.capital)}`;
+    portfolioValueElement.textContent = `$${formatNumber(Math.round(gameState.portfolioValue))}`;
+    quarterElement.textContent = gameState.quarter;
+    yearElement.textContent = gameState.year;
+    
+    renderEvents();
+}
+
+// Start game
+function startGame() {
+    let totalAllocation = 0;
+    
+    gameState.allocation.forEach(asset => {
+        totalAllocation += asset.allocation;
+    });
+    
+    if (totalAllocation !== 100) {
+        errorMessage.style.display = "block";
+        return;
+    }
+    
+    gameState.gameStarted = true;
+    gameState.portfolioValue = gameState.capital;
+    gameState.events.push({
+        type: "neutral",
+        message: `Investment simulation started with $${formatNumber(gameState.capital)}.`
+    });
+    
+    // Disable allocation sliders
+    const sliders = document.querySelectorAll(".allocation-slider");
+    sliders.forEach(slider => {
+        slider.disabled = true;
+    });
+    
+    startGameButton.disabled = true;
+    advanceQuarter();
+    updateUI();
+}
+
+// Get asset category
+function getAssetCategory(assetId) {
+    if (assetId <= 4) return "stocks";
+    if (assetId <= 6) return "bonds";
+    return "alternatives";
+}
+
+// Calculate return for an asset
+function calculateAssetReturn(asset, eventImpact) {
+    const category = getAssetCategory(asset.id);
+    const impactFactor = eventImpact.impactFactors[category];
+    
+    // Quarterly expected return (annual / 4)
+    const quarterlyExpectedReturn = asset.expectedReturn / 4;
+    
+    // Calculate random component based on volatility
+    // Volatility is annual, so divide by 2 for quarterly
+    const quarterlyVolatility = asset.volatility / 2;
+    const randomComponent = (Math.random() * 2 - 1) * quarterlyVolatility;
+    
+    // Calculate event impact
+    let eventComponent = 0;
+    if (eventImpact.type === "success") {
+        eventComponent = Math.random() * 2 * impactFactor;
+    } else if (eventImpact.type === "failure") {
+        eventComponent = -Math.random() * 2 * impactFactor;
+    } else {
+        // Neutral events have minimal impact
+        eventComponent = (Math.random() * 0.6 - 0.3) * impactFactor;
+    }
+    
+    // Total return for this quarter
+    return quarterlyExpectedReturn + randomComponent + eventComponent;
+}
+
+// Advance to next quarter
+function advanceQuarter() {
+    if (gameState.gameOver) return;
+    
+    gameState.quarter++;
+    if (gameState.quarter > 4) {
+        gameState.quarter = 1;
+        gameState.year++;
+    }
+    
+    // Select a random market event
+    const eventIndex = Math.floor(Math.random() * marketEvents.length);
+    const event = marketEvents[eventIndex];
+    
+    // Process portfolio performance
+    let quarterlyPortfolioReturn = 0;
+    let oldPortfolioValue = gameState.portfolioValue;
+    
+    // Asset-specific events for color
+    const assetEvents = [];
+    
+    gameState.allocation.forEach(asset => {
+        if (asset.allocation > 0) {
+            // Calculate this asset's return
+            const assetReturn = calculateAssetReturn(asset, event);
+            
+            // Calculate this asset's contribution to portfolio return
+            const weightedReturn = assetReturn * (asset.allocation / 100);
+            quarterlyPortfolioReturn += weightedReturn;
+            
+            // Track significant asset movements for events log
+            if (Math.abs(assetReturn) > 2) {
+                assetEvents.push({
+                    asset: asset.name,
+                    return: assetReturn
+                });
+            }
+        }
+    });
+    
+    // Update portfolio value
+    gameState.portfolioValue *= (1 + (quarterlyPortfolioReturn / 100));
+    
+    // Round portfolio value to nearest dollar
+    gameState.portfolioValue = Math.round(gameState.portfolioValue);
+    
+    // Add quarterly return to tracking
+    gameState.quarterlyReturns.push({
+        quarter: gameState.quarter,
+        year: gameState.year,
+        value: gameState.portfolioValue,
+        return: quarterlyPortfolioReturn
+    });
+    
+    // Create event messages
+    if (assetEvents.length > 0) {
+        // Sort by absolute return (biggest moves first)
+        assetEvents.sort((a, b) => Math.abs(b.return) - Math.abs(a.return));
+        
+        // Add top 2 asset events to log
+        for (let i = 0; i < Math.min(2, assetEvents.length); i++) {
+            const assetEvent = assetEvents[i];
+            const eventType = assetEvent.return > 0 ? "success" : "failure";
+            const message = assetEvent.return > 0 
+                ? `${assetEvent.asset} performed well, gaining ${assetEvent.return.toFixed(1)}%.`
+                : `${assetEvent.asset} struggled, losing ${Math.abs(assetEvent.return).toFixed(1)}%.`;
+                
+            gameState.events.push({
+                type: eventType,
+                message: message
+            });
+        }
+    }
+    
+    // Add market-wide event
+    const marketEventMessage = event.message
+        .replace("{asset}", "Markets")
+        .replace("{percent}", Math.abs(quarterlyPortfolioReturn).toFixed(1));
+        
+    gameState.events.push({
+        type: quarterlyPortfolioReturn >= 0 ? "success" : "failure",
+        message: marketEventMessage
+    });
+    
+    // Add quarterly summary
+    gameState.events.push({
+        type: quarterlyPortfolioReturn >= 0 ? "success" : "failure",
+        message: `Q${gameState.quarter} ${gameState.year}: Portfolio ${quarterlyPortfolioReturn >= 0 ? "gained" : "lost"} ${Math.abs(quarterlyPortfolioReturn).toFixed(2)}%, now worth $${formatNumber(gameState.portfolioValue)}.`
+    });
+    
+    // Check for game over
+    if (gameState.quarter >= gameState.maxQuarters && gameState.year === 2025) {
+        endGame();
+    }
+    
+    updateUI();
+}
+
+// Apply investment profile
+function applyProfile(profileName) {
+    if (gameState.gameStarted) return;
+    
+    const profile = investmentProfiles[profileName];
+    
+    if (profile) {
+        for (let i = 0; i < gameState.allocation.length; i++) {
+            gameState.allocation[i].allocation = profile[i];
+        }
+        
+        renderAssetClasses();
+        updateAllocationChart();
+    }
+}
+
+// End game
+function endGame() {
+    gameState.gameOver = true;
+    
+    const initialValue = gameState.capital;
+    const finalValue = gameState.portfolioValue;
+    const totalReturn = ((finalValue / initialValue) - 1) * 100;
+    const annualizedReturn = totalReturn; // Since we only simulate 1 year
+    
+    // Determine performance rating
+    let performanceMessage = "";
+    if (totalReturn > 15) {
+        performanceMessage = "Outstanding! You outperformed most professional investors.";
+    } else if (totalReturn > 10) {
+        performanceMessage = "Excellent performance! Your strategy worked very well.";
+    } else if (totalReturn > 5) {
+        performanceMessage = "Solid results. Your portfolio performed above average.";
+    } else if (totalReturn > 0) {
+        performanceMessage = "Modest gains. Your strategy was somewhat effective.";
+    } else if (totalReturn > -5) {
+        performanceMessage = "Slight loss. Market conditions were challenging.";
+    } else if (totalReturn > -10) {
+        performanceMessage = "Significant loss. Your strategy may need reconsideration.";
+    } else {
+        performanceMessage = "Substantial loss. Consider a more diversified approach next time.";
+    }
+    
+    // Create allocation summary
+    let allocationSummary = "<h3>Your Asset Allocation:</h3><ul>";
+    gameState.allocation.forEach(asset => {
+        if (asset.allocation > 0) {
+            allocationSummary += `<li>${asset.name}: ${asset.allocation}%</li>`;
+        }
+    });
+    allocationSummary += "</ul>";
+    
+    // Create quarterly performance summary
+    let quarterlyPerformance = "<h3>Quarterly Performance:</h3><ul>";
+    gameState.quarterlyReturns.forEach(quarter => {
+        quarterlyPerformance += `<li>Q${quarter.quarter} ${quarter.year}: ${quarter.return >= 0 ? "+" : ""}${quarter.return.toFixed(2)}% ($${formatNumber(quarter.value)})</li>`;
+    });
+    quarterlyPerformance += "</ul>";
+    
+    // Display results
+    resultsContent.innerHTML = `
+        <p><strong>Final Results (After 1 Year):</strong></p>
+        <p>Initial Investment: $${formatNumber(initialValue)}</p>
+        <p>Final Portfolio Value: $${formatNumber(finalValue)}</p>
+        <p>Total Return: ${totalReturn.toFixed(2)}%</p>
+        <p>Annualized Return: ${annualizedReturn.toFixed(2)}%</p>
+        <p><strong>${performanceMessage}</strong></p>
+        ${allocationSummary}
+        ${quarterlyPerformance}
+    `;
+    
+    // Create simple chart visualization
+    renderResultsChart();
+    
+    // Show results modal
+    resultsModal.style.display = "block";
+}
+
+// Render results chart
+function renderResultsChart() {
+    resultsChart.innerHTML = "";
+    
+    // We'll create a simple bar chart for quarterly returns
+    const chartHeight = 250;
+    const chartWidth = resultsChart.clientWidth - 40;
+    const barWidth = chartWidth / gameState.quarterlyReturns.length;
+    const zeroLine = chartHeight / 2;
+    
+    // Create chart container
+    const chartSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    chartSvg.setAttribute("width", "100%");
+    chartSvg.setAttribute("height", "100%");
+    chartSvg.setAttribute("viewBox", `0 0 ${chartWidth + 40} ${chartHeight}`);
+    
+    // Add zero line
+    const zeroLinePath = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    zeroLinePath.setAttribute("x1", "30");
+    zeroLinePath.setAttribute("y1", zeroLine);
+    zeroLinePath.setAttribute("x2", chartWidth + 30);
+    zeroLinePath.setAttribute("y2", zeroLine);
+    zeroLinePath.setAttribute("stroke", "#ccc");
+    zeroLinePath.setAttribute("stroke-width", "1");
+    chartSvg.appendChild(zeroLinePath);
+    
+    // Find max return for scaling
+    const maxReturn = Math.max(...gameState.quarterlyReturns.map(q => Math.abs(q.return)), 5);
+    const scale = (chartHeight / 2 - 20) / maxReturn;
+    
+    // Create initial value point
+    const initialPoint = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    initialPoint.setAttribute("cx", "30");
+    initialPoint.setAttribute("cy", zeroLine);
+    initialPoint.setAttribute("r", "4");
+    initialPoint.setAttribute("fill", "#3498db");
+    chartSvg.appendChild(initialPoint);
+    
+    let runningValue = gameState.capital;
+    let lastX = 30;
+    let lastY = zeroLine;
+    
+    // Add bars and value line
+    gameState.quarterlyReturns.forEach((quarter, index) => {
+        const barHeight = Math.abs(quarter.return) * scale;
+        const barX = 30 + (index * barWidth) + 10;
+        const barY = quarter.return >= 0 ? zeroLine - barHeight : zeroLine;
+        const barColor = quarter.return >= 0 ? "#2ecc71" : "#e74c3c";
+        
+        // Create bar
+        const bar = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        bar.setAttribute("x", barX);
+        bar.setAttribute("y", barY);
+        bar.setAttribute("width", barWidth - 20);
+        bar.setAttribute("height", barHeight);
+        bar.setAttribute("fill", barColor);
+        
+        // Add quarter label
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", barX + (barWidth - 20) / 2);
+        label.setAttribute("y", chartHeight - 10);
+        label.setAttribute("text-anchor", "middle");
+        label.setAttribute("font-size", "12");
+        label.textContent = `Q${quarter.quarter}`;
+        
+        // Add percentage label
+        const percentLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        percentLabel.setAttribute("x", barX + (barWidth - 20) / 2);
+        percentLabel.setAttribute("y", barY + (quarter.return >= 0 ? -5 : barHeight + 15));
+        percentLabel.setAttribute("text-anchor", "middle");
+        percentLabel.setAttribute("font-size", "12");
+        percentLabel.setAttribute("fill", barColor);
+        percentLabel.textContent = `${quarter.return >= 0 ? "+" : ""}${quarter.return.toFixed(1)}%`;
+        
+        chartSvg.appendChild(bar);
+        chartSvg.appendChild(label);
+        chartSvg.appendChild(percentLabel);
+        
+        // Calculate point for value line
+        const pointX = barX + (barWidth - 20) / 2;
+        const pointY = zeroLine - ((quarter.value / gameState.capital - 1) * scale * maxReturn);
+        
+        // Create point
+        const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        point.setAttribute("cx", pointX);
+        point.setAttribute("cy", pointY);
+        point.setAttribute("r", "4");
+        point.setAttribute("fill", "#3498db");
+        
+        // Create line segment
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", lastX);
+        line.setAttribute("y1", lastY);
+        line.setAttribute("x2", pointX);
+        line.setAttribute("y2", pointY);
+        line.setAttribute("stroke", "#3498db");
+        line.setAttribute("stroke-width", "2");
+        
+        chartSvg.appendChild(line);
+        chartSvg.appendChild(point);
+        
+        lastX = pointX;
+        lastY = pointY;
+    });
+    
+    resultsChart.appendChild(chartSvg);
+}
+
+// Event listeners
+startGameButton.addEventListener("click", startGame);
+restartGameButton.addEventListener("click", initGame);
+newGameButton.addEventListener("click", () => {
+    resultsModal.style.display = "none";
+    initGame();
+});
+closeModalButton.addEventListener("click", () => {
+    resultsModal.style.display = "none";
+});
+
+// Close modal when clicking outside
+window.addEventListener("click", (event) => {
+    if (event.target === resultsModal) {
+        resultsModal.style.display = "none";
+    }
+});
+
+// Profile button listeners
+profileButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        profileButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+        applyProfile(button.dataset.profile);
+    });
+});
+
+// Initialize the game
+initGame();
+  
+</script>
