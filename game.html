@@ -398,7 +398,7 @@ function initGame() {
     gameState.year = 2025;
     gameState.portfolio = [];
     gameState.startups = [];
-    gameState.events = [{ type: "neutral", message: "Welcome to New Wave Investments! You have $5,500,000 to invest in promising startups." }];
+    gameState.events = [{ type: "neutral", message: "Welcome to New Wave Investments! You have $3,500,000 to invest in promising startups." }];
     gameState.gameOver = false;
     
     generateStartups();
@@ -574,7 +574,7 @@ function processInvestments() {
         
         if (performanceRoll < 15 + (startup.risk * 5)) {
             // Negative event
-            valueChange = -(Math.floor(Math.random() * 50) + 5); // -5% to -55%
+            valueChange = -(Math.floor(Math.random() * 30) + 5); // -5% to -35%
             eventType = "failure";
             
             const eventIndex = Math.floor(Math.random() * events.filter(e => e.type === "failure").length);
