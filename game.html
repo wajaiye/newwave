@@ -413,8 +413,8 @@ function generateStartups() {
     for (let i = 0; i < numStartups; i++) {
         const name = `${namePrefix[Math.floor(Math.random() * namePrefix.length)]}${nameSuffix[Math.floor(Math.random() * nameSuffix.length)]}`;
         const category = categories[Math.floor(Math.random() * categories.length)];
-        const risk = Math.floor(Math.random() * 5) + 1; // 1-5 risk level
-        const potential = Math.floor(Math.random() * 5) + 1; // 1-5 potential level
+        const risk = Math.floor(Math.random() * 3) + 1; // 1-5 risk level
+        const potential = Math.floor(Math.random() * 4) + 2; // 1-5 potential level
         const cost = Math.floor((Math.random() * 1000000) + 750000); // $1M - $1.75M
         
         const descriptions = [
