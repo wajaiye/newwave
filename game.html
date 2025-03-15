@@ -330,11 +330,11 @@
     <script>
   // Game state
 const gameState = {
-    funds: 10000000,
+    funds: 2500000,
     portfolioValue: 0,
     quarter: 1,
     year: 2025,
-    maxQuarters: 20,
+    maxQuarters: 4,
     portfolio: [],
     startups: [],
     events: [],
@@ -392,13 +392,13 @@ const closeModalButton = document.querySelector(".close");
 
 // Initialize game
 function initGame() {
-    gameState.funds = 10000000;
+    gameState.funds = 2500000;
     gameState.portfolioValue = 0;
-    gameState.quarter = 1;
+    gameState.quarter = 2;
     gameState.year = 2025;
     gameState.portfolio = [];
     gameState.startups = [];
-    gameState.events = [{ type: "neutral", message: "Welcome to New Wave Investments! You have $10,000,000 to invest in promising startups." }];
+    gameState.events = [{ type: "neutral", message: "Welcome to New Wave Investments! You have $2,500,000 to invest in promising startups." }];
     gameState.gameOver = false;
     
     generateStartups();
@@ -571,9 +571,9 @@ function processInvestments() {
         let eventType = "neutral";
         let eventMessage = "";
         
-        if (performanceRoll < 15 + (startup.risk * 5)) {
+        if (performanceRoll < 50 + (startup.risk * 5)) {
             // Negative event
-            valueChange = -(Math.floor(Math.random() * 20) + 5); // -5% to -25%
+            valueChange = -(Math.floor(Math.random() * 40) + 5); // -5% to -45%
             eventType = "failure";
             
             const eventIndex = Math.floor(Math.random() * events.filter(e => e.type === "failure").length);
@@ -583,7 +583,7 @@ function processInvestments() {
                 .replace("{name}", startup.name)
                 .replace("{percent}", Math.abs(valueChange))
                 .replace("{company}", bigCompanies[Math.floor(Math.random() * bigCompanies.length)]);
-        } else if (performanceRoll > 85 - (startup.potential * 5)) {
+        } else if (performanceRoll > 100 - (startup.potential * 5)) {
             // Positive event
             valueChange = Math.floor(Math.random() * 30) + 10; // +10% to +40%
             eventType = "success";
