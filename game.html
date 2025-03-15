@@ -282,7 +282,7 @@
         <div class="game-stats">
             <div class="stat">
                 <div class="stat-label">Available Funds</div>
-                <div class="stat-value" id="funds">$2,500,000</div>
+                <div class="stat-value" id="funds">$3,500,000</div>
             </div>
             <div class="stat">
                 <div class="stat-label">Portfolio Value</div>
@@ -290,7 +290,7 @@
             </div>
             <div class="stat">
                 <div class="stat-label">Quarter</div>
-                <div class="stat-value" id="quarter">2</div>
+                <div class="stat-value" id="quarter">1</div>
             </div>
             <div class="stat">
                 <div class="stat-label">Year</div>
@@ -310,7 +310,7 @@
         
         <h2>Events Log</h2>
         <div class="events-log" id="events-log">
-            <div class="event event-neutral">Welcome to New Wave Investments! You have $2,500,000 to invest in promising startups.</div>
+            <div class="event event-neutral">Welcome to New Wave Investments! You have $3,500,000 to invest in promising startups.</div>
         </div>
         
         <div id="results-modal" class="modal">
@@ -330,11 +330,11 @@
     <script>
   // Game state
 const gameState = {
-    funds: 3000000,
+    funds: 3500000,
     portfolioValue: 0,
-    quarter: 2,
+    quarter: 1,
     year: 2025,
-    maxQuarters: 6,
+    maxQuarters: 5,
     portfolio: [],
     startups: [],
     events: [],
@@ -392,13 +392,13 @@ const closeModalButton = document.querySelector(".close");
 
 // Initialize game
 function initGame() {
-    gameState.funds = 3000000;
+    gameState.funds = 3500000;
     gameState.portfolioValue = 0;
-    gameState.quarter = 2;
+    gameState.quarter = 1;
     gameState.year = 2025;
     gameState.portfolio = [];
     gameState.startups = [];
-    gameState.events = [{ type: "neutral", message: "Welcome to New Wave Investments! You have $2,500,000 to invest in promising startups." }];
+    gameState.events = [{ type: "neutral", message: "Welcome to New Wave Investments! You have $5,500,000 to invest in promising startups." }];
     gameState.gameOver = false;
     
     generateStartups();
@@ -415,7 +415,7 @@ function generateStartups() {
         const category = categories[Math.floor(Math.random() * categories.length)];
         const risk = Math.floor(Math.random() * 5) + 1; // 1-5 risk level
         const potential = Math.floor(Math.random() * 5) + 1; // 1-5 potential level
-        const cost = Math.floor((Math.random() * 1000000) + 1000000); // $1M - $2M
+        const cost = Math.floor((Math.random() * 1000000) + 750000); // $1M - $1.75M
         
         const descriptions = [
             `A ${category} startup focusing on innovative solutions for modern problems.`,
@@ -633,7 +633,7 @@ function endGame() {
     gameState.gameOver = true;
     
     const totalValue = gameState.funds + gameState.portfolioValue;
-    const roi = (totalValue / 3000000 - 1) * 100;
+    const roi = (totalValue / 3500000 - 1) * 100;
     
     let message = "";
     if (roi > 100) {
@@ -652,7 +652,7 @@ function endGame() {
     
     resultsContent.innerHTML = `
         <p>Game Over! Here are your results:</p>
-        <p>Starting Capital: $2,500,000</p>
+        <p>Starting Capital: $3,500,000</p>
         <p>Final Portfolio Value: $${formatNumber(gameState.portfolioValue)}</p>
         <p>Cash on Hand: $${formatNumber(gameState.funds)}</p>
         <p>Total Value: $${formatNumber(totalValue)}</p>
